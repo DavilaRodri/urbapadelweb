@@ -1,0 +1,13 @@
+{
+  "name": "UrbaPadel",
+  "short_name": "UrbaPadel",
+  "description": "Reserva la pista de pádel y las instalaciones de tu urbanización.",
+  "lang": "es",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#263238",
+  "theme_color": "#263238",
+  "icons": [
+    { "src": "img/favicon.png", "sizes": "1024x1024", "type": "image/png" }
+  ]
+}

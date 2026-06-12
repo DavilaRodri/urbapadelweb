@@ -9,7 +9,12 @@
 <meta name="author" content="UrbaPadel">
 <meta name="theme-color" content="#263238">
 <link rel="canonical" href="https://urbapadel.com/">
+<link rel="alternate" hreflang="es" href="https://urbapadel.com/">
+<link rel="alternate" hreflang="x-default" href="https://urbapadel.com/">
 <meta name="robots" content="index, follow">
+<meta name="application-name" content="UrbaPadel">
+<meta name="apple-mobile-web-app-title" content="UrbaPadel">
+<link rel="manifest" href="site.webmanifest">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -58,6 +63,32 @@
     {"@type":"Question","name":"¿Qué se puede reservar?","acceptedAnswer":{"@type":"Answer","text":"La pista de pádel y otras instalaciones comunes como salas de juntas o usos múltiples, según lo que tenga habilitado cada urbanización."}},
     {"@type":"Question","name":"¿Está disponible para iPhone y Android?","acceptedAnswer":{"@type":"Answer","text":"Sí, UrbaPadel está disponible en App Store y Google Play."}}
   ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "UrbaPadel",
+  "alternateName": ["Urba Padel", "Urbapadel"],
+  "url": "https://urbapadel.com/",
+  "logo": "https://urbapadel.com/img/favicon.png",
+  "image": "https://urbapadel.com/img/og.png",
+  "email": "contacto@urbapadel.com",
+  "description": "App para reservar la pista de pádel y las instalaciones comunes de tu urbanización.",
+  "sameAs": [
+    "https://play.google.com/store/apps/details?id=com.rd.urbapadel",
+    "https://apps.apple.com/es/app/urbapadel/id6743709716"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "UrbaPadel",
+  "url": "https://urbapadel.com/",
+  "inLanguage": "es-ES"
 }
 </script>
 
@@ -111,7 +142,7 @@
   .feat ul { margin-left: 4px; list-style: none; }
   .feat li { font-size: 16px; margin-bottom: 10px; padding-left: 28px; position: relative; }
   .feat li::before { content: '✓'; position: absolute; left: 0; color: var(--primary-d); font-weight: 800; }
-  .shot { border-radius: 20px; overflow: hidden; box-shadow: 0 18px 50px rgba(38,50,56,.18); background: #eceff1; aspect-ratio: 16/10; }
+  .shot { justify-self: center; width: 258px; aspect-ratio: 9/19; border-radius: 32px; overflow: hidden; background: #0d1722; border: 8px solid #0d1722; box-shadow: 0 24px 60px rgba(38,50,56,.28); }
   .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
   @media (max-width: 760px) { .feat .row, .feat .row.rev .txt { grid-template-columns: 1fr; order: 0; } .feat .row { gap: 26px; } }
 
@@ -181,10 +212,21 @@
       </div>
     </div>
     <div class="phone">
-      <img src="img/hero.png" alt="App UrbaPadel mostrando la pantalla de reservas de pádel"
+      <img src="img/hero.png" alt="App UrbaPadel mostrando el inicio con accesos a Urba y Pádel" fetchpriority="high" decoding="async"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
       <div class="ph-fallback" style="display:none;">Captura del móvil<br>(img/hero.png)</div>
     </div>
+  </div>
+</section>
+
+<section style="background:#fff;padding:34px 0 6px;text-align:center;">
+  <div class="wrap">
+    <p style="font-size:17px;color:#546e7a;max-width:840px;margin:0 auto;">
+      <b>UrbaPadel</b> es la app para <b>reservar la pista de pádel</b> y las
+      instalaciones comunes de tu urbanización o comunidad de vecinos —salas,
+      incidencias y comunicados— en un mismo sitio. Gratis para los vecinos,
+      disponible para iPhone y Android.
+    </p>
   </div>
 </section>
 
@@ -202,7 +244,7 @@
       </ul>
     </div>
     <div class="shot">
-      <img src="img/reservas.png" alt="Pantalla de reservas de pista de pádel en UrbaPadel"
+      <img src="img/reservas.png" alt="Pantalla de reservas de pista de pádel en UrbaPadel" loading="lazy" decoding="async"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
       <div class="sh-fallback" style="display:none;">img/reservas.png</div>
     </div>
@@ -222,7 +264,7 @@
       </ul>
     </div>
     <div class="shot">
-      <img src="img/comunidad.png" alt="Comunicados e incidencias de la comunidad en UrbaPadel"
+      <img src="img/comunidad.png" alt="Comunicados e incidencias de la comunidad en UrbaPadel" loading="lazy" decoding="async"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
       <div class="sh-fallback" style="display:none;">img/comunidad.png</div>
     </div>
@@ -233,9 +275,10 @@
   <div class="wrap">
     <h2>Así se ve UrbaPadel</h2>
     <div class="strip">
-      <div class="gphone"><img src="img/screen-1.png" alt="Captura de UrbaPadel 1" onerror="this.parentElement.style.display='none';"></div>
-      <div class="gphone"><img src="img/screen-2.png" alt="Captura de UrbaPadel 2" onerror="this.parentElement.style.display='none';"></div>
-      <div class="gphone"><img src="img/screen-3.png" alt="Captura de UrbaPadel 3" onerror="this.parentElement.style.display='none';"></div>
+      <div class="gphone"><img src="img/screen-1.png" alt="UrbaPadel: horarios disponibles y reserva activa" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none';"></div>
+      <div class="gphone"><img src="img/screen-2.png" alt="UrbaPadel: reserva de salas de juntas" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none';"></div>
+      <div class="gphone"><img src="img/screen-3.png" alt="UrbaPadel: incidencias de la comunidad" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none';"></div>
+      <div class="gphone"><img src="img/screen-4.png" alt="UrbaPadel: comunicados de la administración" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none';"></div>
     </div>
   </div>
 </section>
