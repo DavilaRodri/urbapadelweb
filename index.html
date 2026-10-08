@@ -76,6 +76,7 @@
   "logo": "https://urbapadel.com/img/favicon.png",
   "image": "https://urbapadel.com/img/og.png",
   "email": "contacto@urbapadel.com",
+  "telephone": "+34 650 49 59 74",
   "description": "App para reservar la pista de pádel y las instalaciones comunes de tu urbanización.",
   "sameAs": [
     "https://play.google.com/store/apps/details?id=com.rd.urbapadel",
@@ -348,6 +349,8 @@ section { padding-block: clamp(72px, 10vw, 120px); }
 
 /* Administradores */
 .admin { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+.contacts { display: grid; gap: 10px; min-width: 0; }
+.btn { text-decoration: none; }
 .mailbox {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
   background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 16px 16px 20px;
@@ -609,7 +612,7 @@ footer a:hover { color: var(--ink); }
         <details><summary>¿Cómo consigo acceso a mi urbanización?</summary><p>Te registras con tu email y tu piso, y el administrador de la comunidad valida que eres residente antes de activar tu acceso.</p></details>
         <details><summary>¿Qué se puede reservar?</summary><p>La pista de pádel y otras instalaciones comunes como salas de juntas o usos múltiples, según lo que tenga habilitado cada urbanización.</p></details>
         <details><summary>¿Está disponible para iPhone y Android?</summary><p>Sí, UrbaPadel está disponible en App Store y Google Play, gratis.</p></details>
-        <details><summary>¿Mi comunidad todavía no la usa, qué hago?</summary><p>Escríbenos a contacto@urbapadel.com y te contamos cómo darla de alta.</p></details>
+        <details><summary>¿Mi comunidad todavía no la usa, qué hago?</summary><p>Escríbenos a contacto@urbapadel.com o llámanos al 650 49 59 74 y te contamos cómo darla de alta.</p></details>
       </div>
     </div>
   </section>
@@ -619,11 +622,17 @@ footer a:hover { color: var(--ink); }
       <div class="stack">
         <p class="label">Para administradores</p>
         <h2>¿Quieres UrbaPadel en tu urbanización?</h2>
-        <p class="lede">Cuéntanos cuántas pistas y salas tenéis y te explicamos cómo dar de alta a la comunidad.</p>
+        <p class="lede">Escríbenos o llámanos. Cuéntanos cuántas pistas y salas tenéis y te explicamos cómo dar de alta a la comunidad.</p>
       </div>
-      <div class="mailbox">
-        <code id="mail">contacto@urbapadel.com</code>
-        <button class="btn" id="copy" type="button">Copiar email</button>
+      <div class="contacts">
+        <div class="mailbox">
+          <code id="mail">contacto@urbapadel.com</code>
+          <button class="btn" id="copy" type="button">Copiar email</button>
+        </div>
+        <div class="mailbox">
+          <code>650 49 59 74</code>
+          <a class="btn" href="tel:+34650495974">Llamar</a>
+        </div>
       </div>
     </div>
   </section>
@@ -637,6 +646,7 @@ footer a:hover { color: var(--ink); }
       <a href="privacidad.html">Política de Privacidad</a>
       <a href="terminos.html">Términos y Condiciones</a>
       <span>contacto@urbapadel.com</span>
+      <a href="tel:+34650495974">650 49 59 74</a>
     </nav>
   </div>
 </footer>
