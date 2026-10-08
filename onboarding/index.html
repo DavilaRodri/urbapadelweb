@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>UrbaPadel · Cómo empezar (guía de bienvenida)</title>
 <meta name="description" content="Cómo empezar con UrbaPadel en 4 pasos: descarga la app, regístrate, espera la aprobación de tu administrador y reserva la pista de tu urbanización.">
 <link rel="canonical" href="https://urbapadel.com/onboarding/">
@@ -12,166 +12,285 @@
 <meta property="og:description" content="Descarga, regístrate y empieza a reservar en 4 pasos.">
 <meta property="og:image" content="https://urbapadel.com/img/og.png">
 <meta property="og:url" content="https://urbapadel.com/onboarding/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-  :root{--bg:#263238;--bg2:#1A2A44;--primary:#40C4FF;--primary-d:#1f9fe0;--text:#37474F;--soft:#78909C;--line:#ECEFF1;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
-  body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6;}
-  a{color:var(--primary-d);text-decoration:none;}
-  .wrap{max-width:780px;margin:0 auto;padding:0 20px;}
+/* Layout: cabecera corta en azul pista; debajo, los cuatro pasos como un recorrido vertical con su captura al lado. */
+:root {
+  --bg: #F1F5F7; --surface: #FFFFFF; --ink: #0C2231; --muted: #4E6A7C; --line: #D3E0E7;
+  --court: #1C5A93; --court-deep: #13436F; --on-court: #FFFFFF; --accent: #0E8FCB;
+  --free: #0A9F5A; --wait: #C77800;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --wrap: 1000px; --gutter: clamp(16px, 4vw, 40px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #09161F; --surface: #0F2230; --ink: #E6F0F5; --muted: #8DA7B7; --line: #1C3546;
+    --court: #164C7E; --court-deep: #0F3858; --accent: #40C4FF; --free: #2BD889; --wait: #FFB547; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #09161F; --surface: #0F2230; --ink: #E6F0F5; --muted: #8DA7B7; --line: #1C3546;
+  --court: #164C7E; --court-deep: #0F3858; --accent: #40C4FF; --free: #2BD889; --wait: #FFB547; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--font-body); -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+p, ul { margin: 0; }
+.label { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
 
-  /* nav */
-  header.nav{position:sticky;top:0;z-index:20;background:rgba(38,50,56,.95);backdrop-filter:blur(8px);}
-  .nav .wrap{max-width:1080px;display:flex;align-items:center;justify-content:space-between;height:62px;}
-  .logo{font-size:21px;font-weight:800;color:#fff;}
-  .logo span{color:var(--primary);}
-  .back{display:inline-flex;align-items:center;gap:7px;color:#cfd8dc;font-size:15px;padding:8px 14px;border:1px solid rgba(255,255,255,.25);border-radius:9px;transition:.15s;}
-  .back:hover{color:#fff;border-color:#fff;}
+/* Cabecera */
+.hero { position: relative; overflow: hidden; isolation: isolate; background: var(--court); color: var(--on-court); padding-top: env(safe-area-inset-top, 0px); }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .5;
+  background: repeating-linear-gradient(90deg, transparent 0 3px, rgb(255 255 255 / .018) 3px 4px), radial-gradient(120% 120% at 80% 0%, transparent 40%, var(--court-deep) 100%); }
+.court-lines { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; }
+.court-lines * { fill: none; stroke: rgb(255 255 255 / .5); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.court-lines .net { stroke: rgb(255 255 255 / .85); stroke-width: 3; stroke-dasharray: 2 5; }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 20px; font-variation-settings: "wdth" 118; }
+.brand img { width: 36px; height: 36px; border-radius: 9px; box-shadow: 0 0 0 1px rgb(255 255 255 / .22), 0 6px 14px -6px rgb(0 0 0 / .5); }
+.back { font-size: 15px; text-decoration: none; padding: 8px 14px; border-radius: 10px; border: 1px solid rgb(255 255 255 / .35); color: rgb(255 255 255 / .9); }
+.back:hover { border-color: #FFFFFF; color: #FFFFFF; }
+.hero-copy { padding-block: 48px 72px; max-width: 640px; }
+.hero-copy .label { color: #9EE6FF; }
+.hero h1 { margin-top: 14px; font-size: clamp(36px, 6vw, 64px); line-height: .98; font-weight: 900; font-variation-settings: "wdth" 120; text-transform: uppercase; letter-spacing: -0.01em; }
+.hero h1 em { font-style: normal; color: #9EE6FF; }
+.hero-copy p { margin-top: 18px; font-size: 19px; color: rgb(255 255 255 / .86); max-width: 30em; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 22px; font-size: 15px; color: rgb(255 255 255 / .8); }
+.meta b { font-family: var(--font-mono); font-weight: 500; color: #FFFFFF; }
 
-  /* hero */
-  .hero{background:linear-gradient(160deg,#263238 0%,#1A2A44 60%,#2E3B55 100%);color:#fff;padding:54px 0 60px;text-align:center;}
-  .hero .badge{display:inline-block;background:rgba(64,196,255,.16);color:var(--primary);font-weight:600;font-size:13px;padding:6px 14px;border-radius:20px;margin-bottom:16px;}
-  .hero h1{font-size:34px;line-height:1.18;margin-bottom:12px;}
-  .hero p{font-size:18px;color:#cfd8dc;max-width:520px;margin:0 auto;}
+/* Pasos */
+.steps { list-style: none; margin: 0; padding: clamp(56px, 8vw, 96px) 0 0; display: grid; counter-reset: s; }
+.step { counter-increment: s; position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr) 210px; gap: 0 clamp(20px, 4vw, 48px); padding-bottom: clamp(48px, 7vw, 80px); }
+.step::before {
+  content: counter(s); font: 900 64px/1 var(--font-display); font-variation-settings: "wdth" 125;
+  color: transparent; -webkit-text-stroke: 1.5px var(--accent); text-align: center;
+}
+.step:not(:last-child)::after { content: ""; position: absolute; left: 37px; top: 78px; bottom: 14px; border-left: 2px dashed var(--line); }
+.step-body { display: grid; gap: 14px; align-content: start; min-width: 0; padding-top: 6px; }
+.step h2 { font-size: clamp(24px, 3.4vw, 32px); line-height: 1.1; font-weight: 800; font-variation-settings: "wdth" 110; }
+.step p, .step li { color: var(--muted); }
+.step strong { color: var(--ink); font-weight: 600; }
+.checklist { list-style: none; padding: 0; display: grid; gap: 8px; }
+.checklist li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; }
+.checklist li::before { content: ""; width: 18px; height: 18px; margin-top: 4px; border-radius: 50%; border: 2px solid var(--accent); }
+.tip { font-size: 14.5px; padding: 10px 14px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 9%, transparent); color: var(--ink); justify-self: start; }
+.tip b { font-family: var(--font-mono); font-weight: 500; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-right: 6px; }
 
-  /* timeline steps */
-  .steps{padding:48px 0 8px;}
-  .step{position:relative;display:flex;gap:22px;padding-bottom:34px;}
-  .step:not(:last-child)::before{content:'';position:absolute;left:23px;top:52px;bottom:0;width:2px;background:linear-gradient(#cfe9f7,#eceff1);}
-  .num{flex:none;width:48px;height:48px;border-radius:50%;background:var(--primary);color:#06222e;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(64,196,255,.35);}
-  .body{flex:1;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:0 6px 22px rgba(38,50,56,.06);}
-  .body h3{font-size:19px;color:var(--bg);margin-bottom:8px;}
-  .body p{font-size:16px;color:#546e7a;margin-bottom:8px;}
-  .body ul{margin:6px 0 4px 20px;}
-  .body li{font-size:15px;color:#546e7a;margin-bottom:6px;}
-  .note{font-size:13px;color:var(--soft);}
+.stores { display: flex; flex-wrap: wrap; gap: 10px; }
+.store { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 13px; border-radius: 12px; background: var(--ink); color: var(--bg); text-decoration: none; line-height: 1.15; transition: transform .15s ease; }
+.store:hover { transform: translateY(-2px); }
+.store svg { width: 22px; height: 22px; flex: none; }
+.store small { display: block; font-size: 11px; opacity: .7; }
+.store b { font-family: var(--font-display); font-size: 16px; font-weight: 700; font-variation-settings: "wdth" 105; }
+.search { font-family: var(--font-mono); font-size: 14px; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--line); color: var(--ink); }
 
-  /* store buttons */
-  .stores{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;}
-  .store{display:inline-flex;align-items:center;gap:10px;background:#0d1722;color:#fff;padding:10px 16px;border-radius:11px;transition:transform .15s,box-shadow .15s;}
-  .store:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,0,0,.3);color:#fff;}
-  .store svg{width:23px;height:23px;fill:#fff;flex:none;}
-  .store .s-small{font-size:10px;color:#b0bec5;line-height:1.1;}
-  .store .s-big{font-size:15px;font-weight:600;line-height:1.1;}
+.status-card { justify-self: start; display: grid; gap: 6px; padding: 16px 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); max-width: 340px; }
+.status-card .row { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.pulse { width: 10px; height: 10px; border-radius: 50%; background: var(--wait); box-shadow: 0 0 0 0 color-mix(in srgb, var(--wait) 50%, transparent); animation: pulse 2s infinite; }
+@keyframes pulse { 70% { box-shadow: 0 0 0 10px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+.status-card small { color: var(--muted); font-size: 14px; }
+.status-card .row.done { color: var(--free); font-weight: 500; font-size: 14.5px; }
 
-  /* help + cta */
-  .help{margin:8px 0 0;background:#F7FAFC;border-radius:14px;padding:18px 20px;color:#546e7a;font-size:15px;}
-  .cta{background:linear-gradient(160deg,#1A2A44,#2E3B55);color:#fff;text-align:center;padding:50px 0;margin-top:40px;}
-  .cta h2{font-size:26px;margin-bottom:8px;}
-  .cta p{color:#cfd8dc;margin-bottom:22px;}
-  .cta .stores{justify-content:center;}
+.device { position: relative; width: 100%; border-radius: 40px; padding: 9px; align-self: start;
+  background: linear-gradient(145deg, #3B4A55, #10181E 45%, #2A363F);
+  box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / .14), 0 0 0 1px rgb(12 34 49 / .25), 0 30px 50px -28px rgb(12 34 49 / .55); }
+.device::before, .device::after { content: ""; position: absolute; width: 3px; border-radius: 2px; background: #2A363F; }
+.device::before { left: -3px; top: 21%; height: 9%; }
+.device::after { right: -3px; top: 27%; height: 14%; }
+.device img { width: 100%; aspect-ratio: 1320 / 2868; border-radius: 32px; background: #0B1820; }
+.no-device { width: 100%; }
 
-  footer{background:#0d1722;color:#90a4ae;padding:26px 0;font-size:13px;text-align:center;}
-  footer a{color:#b0bec5;}footer a:hover{color:#fff;}
+/* Ayuda y CTA */
+.help { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px 24px; padding: 22px 24px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); margin-bottom: clamp(56px, 8vw, 96px); }
+.help h3 { font-size: 20px; font-variation-settings: "wdth" 108; }
+.help p { color: var(--muted); font-size: 15.5px; margin-top: 4px; }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.mail code { font: 500 16px/1.2 var(--font-mono); user-select: all; overflow-wrap: anywhere; }
+.btn { font: 600 14px/1 var(--font-body); padding: 11px 16px; border-radius: 10px; cursor: pointer; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); }
+.cta { background: var(--court); color: var(--on-court); padding-block: clamp(56px, 8vw, 88px); }
+.cta .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
+.cta h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 900; font-variation-settings: "wdth" 120; text-transform: uppercase; line-height: 1; }
+.cta .store { background: #FFFFFF; color: #0C2231; }
+footer { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); font-size: 14px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 22px; justify-content: space-between; }
+footer nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--ink); }
 
-  @media(max-width:560px){.hero h1{font-size:27px;}.step{gap:14px;}.num{width:42px;height:42px;font-size:18px;}.step:not(:last-child)::before{left:20px;}}
+@media (max-width: 760px) {
+  .step { grid-template-columns: 52px minmax(0, 1fr); }
+  .step::before { font-size: 46px; }
+  .step:not(:last-child)::after { left: 25px; top: 58px; }
+  .device, .no-device { grid-column: 2; width: min(220px, 100%); margin-top: 22px; }
+  .help { grid-template-columns: minmax(0, 1fr); }
+  .court-lines line { display: none; }
+}
+.to-top {
+  position: fixed; z-index: 10; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  border: 1px solid rgb(255 255 255 / .25); background: var(--court); color: #FFFFFF;
+  box-shadow: 0 12px 28px -10px rgb(0 0 0 / .5); opacity: 0; transform: translateY(12px); pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { background: var(--court-deep); }
+.to-top svg { width: 22px; height: 22px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
 
-<header class="nav">
+<header class="hero">
+  <svg class="court-lines" viewBox="0 0 2000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect x="0" y="0" width="2000" height="1000"/>
+    <line class="net" x1="1150" y1="0" x2="1150" y2="1000"/>
+    <line x1="1695" y1="0" x2="1695" y2="1000"/>
+    <line x1="1150" y1="500" x2="1695" y2="500"/>
+  </svg>
   <div class="wrap">
-    <a href="../" class="logo">Urba<span>Padel</span></a>
-    <a href="../" class="back">← Inicio</a>
+    <div class="bar">
+      <a class="brand" href="/"><img src="../img/logo.png" alt="" width="36" height="36">URBAPADEL</a>
+      <a class="back" href="/">← Inicio</a>
+    </div>
+    <div class="hero-copy">
+      <p class="label">Guía de bienvenida</p>
+      <h1>De la descarga a la pista <em>en 4 pasos.</em></h1>
+      <p>Descarga la app, regístrate y reserva la pista de tu urbanización desde el móvil.</p>
+      <div class="meta"><span><b>Gratis</b> para los vecinos</span><span><b>iOS</b> y <b>Android</b></span></div>
+    </div>
   </div>
 </header>
 
-<section class="hero">
-  <div class="wrap">
-    <div class="badge">Guía de bienvenida</div>
-    <h1>Empieza con UrbaPadel en 4 pasos</h1>
-    <p>Descarga la app, regístrate y reserva la pista de tu urbanización desde el móvil. Es gratis y rápido.</p>
-  </div>
-</section>
-
-<section class="steps">
-  <div class="wrap">
-
-    <div class="step">
-      <div class="num">1</div>
-      <div class="body">
-        <h3>📲 Descarga la app</h3>
-        <p>Búscala como <strong>“UrbaPadel”</strong> en tu tienda de aplicaciones:</p>
+<main class="wrap">
+  <ol class="steps">
+    <li class="step">
+      <div class="step-body">
+        <h2>Descarga la app</h2>
+        <p>Búscala como <span class="search">UrbaPadel</span> en tu tienda de aplicaciones o entra directamente:</p>
         <div class="stores">
-          <a class="store" href="https://apps.apple.com/es/app/urbapadel/id6743709716">
-            <svg viewBox="0 0 384 512"><path d="M318.7 268c-.2-37 16.7-65 50.6-85.7-19-27.2-47.5-42.2-85.1-45-35.9-2.8-75.1 21-89.6 21-15.2 0-49.9-20-77.2-20C61.2 138.4 1.6 184.3 1.6 277.7c0 27.6 5 56.1 15.1 85.4 13.4 38.6 61.9 133.4 112.5 131.9 26.5-.6 45.2-18.8 79.7-18.8 33.5 0 50.8 18.8 79.6 18.8 51.1-.7 95-86.8 107.7-125.5-68.4-32.3-64.6-94.6-64.6-101.5zm-56.9-228c27.4-32.5 24.9-62.1 24.1-72.8-24.2 1.4-52.2 16.5-68.2 35-17.6 19.8-27.9 44.3-25.7 71.5 26.1 2 49.9-11.4 69.8-33.7z"/></svg>
-            <span><span class="s-small">Descárgala en</span><br><span class="s-big">App Store</span></span>
+          <a class="store" href="https://apps.apple.com/es/app/urbapadel/id6743709716" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.5 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.3 1-4.1 2.5-1.8 3.1-.5 7.6 1.3 10.1.8 1.2 1.8 2.6 3.1 2.5 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.4-1-2.4-3.9zM14 5.2c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4z"/></svg>
+            <span><small>Descárgala en el</small><b>App Store</b></span>
           </a>
-          <a class="store" href="https://play.google.com/store/apps/details?id=com.rd.urbapadel&hl=es">
-            <svg viewBox="0 0 512 512"><path d="M325.3 234.3 104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l220.7-221.3 60.1 60.1L104.6 499z"/></svg>
-            <span><span class="s-small">Disponible en</span><br><span class="s-big">Google Play</span></span>
+          <a class="store" href="https://play.google.com/store/apps/details?id=com.rd.urbapadel&amp;hl=es" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0A9F5A" d="M3.6 2.3 13.4 12l-9.8 9.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1z"/><path fill="#F2B90F" d="m17 8.4-3.6 3.6L17 15.6l3.9-2.2c1-.6 1-2 0-2.6z"/><path fill="#E2531E" d="M13.4 12 3.6 21.7c.3.2.8.2 1.2 0L17 15.6z"/><path fill="#0E8FCB" d="M4.8 2.3c-.4-.2-.9-.2-1.2 0L13.4 12 17 8.4z"/></svg>
+            <span><small>Disponible en</small><b>Google Play</b></span>
           </a>
         </div>
       </div>
-    </div>
+      <div class="no-device" aria-hidden="true"></div>
+    </li>
 
-    <div class="step">
-      <div class="num">2</div>
-      <div class="body">
-        <h3>📝 Crea tu cuenta</h3>
-        <p>Abre la app y pulsa <strong>“Regístrate”</strong>. Te pedirá:</p>
-        <ul>
-          <li>Nombre y apellidos</li>
-          <li>Un nombre de usuario y tu correo</li>
-          <li>Tu <strong>urbanización</strong> y tu <strong>piso / vivienda</strong></li>
+    <li class="step">
+      <div class="step-body">
+        <h2>Crea tu cuenta</h2>
+        <p>Abre la app y pulsa <strong>Regístrate</strong>. Te pedirá:</p>
+        <ul class="checklist">
+          <li><span>Nombre y apellidos</span></li>
+          <li><span>Un nombre de usuario y tu correo</span></li>
+          <li><span>Tu <strong>urbanización</strong> y tu <strong>piso o vivienda</strong>, por ejemplo Chalet 10 o 28-5-A</span></li>
         </ul>
-        <p>Acepta los términos y, al terminar, <strong>te llegará un email para verificar tu correo</strong>: ábrelo y pulsa el enlace.</p>
-        <p class="note">Revisa también la carpeta de spam por si acaso.</p>
+        <p>Acepta los términos. Al terminar te llegará un <strong>email para verificar tu correo</strong>: ábrelo y pulsa el enlace.</p>
+        <p class="tip"><b>Consejo</b>Si no lo ves, revisa la carpeta de spam.</p>
       </div>
-    </div>
+      <div class="device"><img src="../img/login.webp" alt="Pantalla de acceso de UrbaPadel con el enlace Regístrate" width="540" height="1173"></div>
+    </li>
 
-    <div class="step">
-      <div class="num">3</div>
-      <div class="body">
-        <h3>⏳ Espera la aprobación</h3>
-        <p>El administrador de tu comunidad comprueba que eres residente y activa tu acceso. Mientras tanto verás <strong>“pendiente de aprobación”</strong> — es normal.</p>
-        <p>En cuanto te aprueben, ya podrás entrar y reservar. 🎾</p>
+    <li class="step">
+      <div class="step-body">
+        <h2>Espera la aprobación</h2>
+        <p>El administrador de tu comunidad comprueba que eres residente y activa tu acceso. Mientras tanto verás este aviso en la app. Es normal.</p>
+        <div class="status-card" aria-label="Ejemplo del estado de la cuenta">
+          <div class="row"><i class="pulse" aria-hidden="true"></i>Pendiente de aprobación</div>
+          <small>Te avisaremos cuando el administrador active tu cuenta.</small>
+        </div>
+        <p>En cuanto te aprueben, ya puedes entrar y reservar.</p>
       </div>
-    </div>
+      <div class="no-device" aria-hidden="true"></div>
+    </li>
 
-    <div class="step">
-      <div class="num">4</div>
-      <div class="body">
-        <h3>🎾 ¡A usar la app!</h3>
-        <ul>
-          <li><strong>Reserva tu pista:</strong> elige día y hora y confirma en dos toques. Cancela si al final no puedes.</li>
-          <li><strong>Zonas comunes:</strong> si tu comunidad las tiene, reserva salas, reporta incidencias y lee los comunicados.</li>
-          <li><strong>Avisos:</strong> recibirás las novedades importantes sin estar pendiente.</li>
+    <li class="step">
+      <div class="step-body">
+        <h2>A usar la app</h2>
+        <ul class="checklist">
+          <li><span><strong>Reserva tu pista.</strong> Elige día y hora y confirma en dos toques. Si al final no puedes, cancélala y la hora queda libre.</span></li>
+          <li><span><strong>Zonas comunes.</strong> Si tu comunidad las tiene, reserva salas, reporta incidencias y lee los comunicados.</span></li>
+          <li><span><strong>Avisos.</strong> Te llegan las novedades importantes sin estar pendiente.</span></li>
         </ul>
       </div>
-    </div>
+      <div class="device"><img src="../img/confirmar.webp" alt="Confirmación de una reserva de pista en UrbaPadel" loading="lazy" width="540" height="1173"></div>
+    </li>
+  </ol>
 
-    <div class="help">
-      ¿Una duda o algo no funciona? Escríbenos a
-      <a href="mailto:contacto@urbapadel.com" style="font-weight:600;">contacto@urbapadel.com</a>
-      y te ayudamos. El uso de la app es <strong>gratis</strong> para los vecinos.
+  <div class="help">
+    <div>
+      <h3>¿Una duda o algo no funciona?</h3>
+      <p>Escríbenos y te ayudamos.</p>
     </div>
-
+    <div class="mail">
+      <code id="mail">contacto@urbapadel.com</code>
+      <button class="btn" id="copy" type="button">Copiar email</button>
+    </div>
   </div>
-</section>
+</main>
 
 <section class="cta">
   <div class="wrap">
     <h2>¿Listo para empezar?</h2>
-    <p>Descarga UrbaPadel y reserva tu pista hoy.</p>
     <div class="stores">
-      <a class="store" href="https://apps.apple.com/es/app/urbapadel/id6743709716">
-        <svg viewBox="0 0 384 512"><path d="M318.7 268c-.2-37 16.7-65 50.6-85.7-19-27.2-47.5-42.2-85.1-45-35.9-2.8-75.1 21-89.6 21-15.2 0-49.9-20-77.2-20C61.2 138.4 1.6 184.3 1.6 277.7c0 27.6 5 56.1 15.1 85.4 13.4 38.6 61.9 133.4 112.5 131.9 26.5-.6 45.2-18.8 79.7-18.8 33.5 0 50.8 18.8 79.6 18.8 51.1-.7 95-86.8 107.7-125.5-68.4-32.3-64.6-94.6-64.6-101.5zm-56.9-228c27.4-32.5 24.9-62.1 24.1-72.8-24.2 1.4-52.2 16.5-68.2 35-17.6 19.8-27.9 44.3-25.7 71.5 26.1 2 49.9-11.4 69.8-33.7z"/></svg>
-        <span><span class="s-small">Descárgala en</span><br><span class="s-big">App Store</span></span>
+      <a class="store" href="https://apps.apple.com/es/app/urbapadel/id6743709716" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.5 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.3 1-4.1 2.5-1.8 3.1-.5 7.6 1.3 10.1.8 1.2 1.8 2.6 3.1 2.5 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.4-1-2.4-3.9zM14 5.2c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4z"/></svg>
+        <span><small>Descárgala en el</small><b>App Store</b></span>
       </a>
-      <a class="store" href="https://play.google.com/store/apps/details?id=com.rd.urbapadel&hl=es">
-        <svg viewBox="0 0 512 512"><path d="M325.3 234.3 104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l220.7-221.3 60.1 60.1L104.6 499z"/></svg>
-        <span><span class="s-small">Disponible en</span><br><span class="s-big">Google Play</span></span>
+      <a class="store" href="https://play.google.com/store/apps/details?id=com.rd.urbapadel&amp;hl=es" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0A9F5A" d="M3.6 2.3 13.4 12l-9.8 9.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1z"/><path fill="#F2B90F" d="m17 8.4-3.6 3.6L17 15.6l3.9-2.2c1-.6 1-2 0-2.6z"/><path fill="#E2531E" d="M13.4 12 3.6 21.7c.3.2.8.2 1.2 0L17 15.6z"/><path fill="#0E8FCB" d="M4.8 2.3c-.4-.2-.9-.2-1.2 0L13.4 12 17 8.4z"/></svg>
+        <span><small>Disponible en</small><b>Google Play</b></span>
       </a>
     </div>
   </div>
 </section>
 
 <footer>
-  <a href="../">← Inicio</a> · © UrbaPadel ·
-  <a href="https://urbapadel.com">urbapadel.com</a> ·
-  <a href="../privacidad.html">Privacidad</a>
+  <div class="wrap">
+    <span>© UrbaPadel</span>
+    <nav aria-label="Legal">
+      <a href="/">Inicio</a>
+      <a href="/privacidad.html">Privacidad</a>
+      <a href="/terminos.html">Términos</a>
+    </nav>
+  </div>
 </footer>
 
+<script>
+(function () {
+  var copy = document.getElementById("copy");
+  copy.addEventListener("click", function () {
+    var el = document.getElementById("mail");
+    var done = function () { copy.textContent = "Copiado"; setTimeout(function () { copy.textContent = "Copiar email"; }, 1800); };
+    var select = function () { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); };
+    try { navigator.clipboard.writeText(el.textContent).then(done, select); } catch (e) { select(); }
+  });
+})();
+</script>
+<button class="to-top" id="to-top" type="button" aria-label="Volver arriba"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>
+(function () {
+  var b = document.getElementById("to-top");
+  var onScroll = function () { b.classList.toggle("show", window.scrollY > window.innerHeight * 0.8); };
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  b.addEventListener("click", function () {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  });
+})();
+</script>
 </body>
 </html>
