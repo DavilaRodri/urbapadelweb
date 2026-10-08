@@ -112,6 +112,8 @@ p, ul { margin: 0; }
 .help { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px 24px; padding: 22px 24px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); margin-bottom: clamp(56px, 8vw, 96px); }
 .help h3 { font-size: 20px; font-variation-settings: "wdth" 108; }
 .help p { color: var(--muted); font-size: 15.5px; margin-top: 4px; }
+.contacts { display: grid; gap: 10px; justify-items: start; }
+.btn { text-decoration: none; }
 .mail { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .mail code { font: 500 16px/1.2 var(--font-mono); user-select: all; overflow-wrap: anywhere; }
 .btn { font: 600 14px/1 var(--font-body); padding: 11px 16px; border-radius: 10px; cursor: pointer; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); }
@@ -233,11 +235,17 @@ footer a:hover { color: var(--ink); }
   <div class="help">
     <div>
       <h3>¿Una duda o algo no funciona?</h3>
-      <p>Escríbenos y te ayudamos.</p>
+      <p>Escríbenos o llámanos y te ayudamos.</p>
     </div>
-    <div class="mail">
-      <code id="mail">contacto@urbapadel.com</code>
-      <button class="btn" id="copy" type="button">Copiar email</button>
+    <div class="contacts">
+      <div class="mail">
+        <code id="mail">contacto@urbapadel.com</code>
+        <button class="btn" id="copy" type="button">Copiar email</button>
+      </div>
+      <div class="mail">
+        <code>650 49 59 74</code>
+        <a class="btn" href="tel:+34650495974">Llamar</a>
+      </div>
     </div>
   </div>
 </main>
