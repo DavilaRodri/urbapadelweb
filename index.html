@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="google-site-verification" content="1ph8sTCiXENXcysreGbmtEdmVHRWkmrjFT2EYKwSsSU">
 <title>UrbaPadel | Reserva la pista de pádel de tu urbanización</title>
 <meta name="description" content="UrbaPadel es la app para reservar la pista de pádel y las salas de tu urbanización, reportar incidencias y recibir los comunicados de la administración. Gratis para vecinos. iPhone y Android.">
@@ -93,250 +93,645 @@
 }
 </script>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" type="image/png" href="img/logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap">
 <style>
-  :root {
-    --bg: #263238; --bg2: #1A2A44; --primary: #40C4FF; --primary-d: #1f9fe0;
-    --accent: #FF5722; --text: #37474F; --soft: #78909C; --line: #ECEFF1;
+/* Layout: la pista vista desde arriba como hero; debajo, un cuadrante de horas real y secciones a dos columnas texto + móvil. */
+:root {
+  --bg: #F1F5F7;        /* cristal: paredes de la pista */
+  --surface: #FFFFFF;
+  --ink: #0C2231;
+  --muted: #4E6A7C;
+  --line: #D3E0E7;
+  --court: #1C5A93;     /* azul pista */
+  --court-deep: #13436F;
+  --on-court: #FFFFFF;
+  --accent: #0E8FCB;    /* cian de la app, oscurecido para texto en claro */
+  --free: #0A9F5A;
+  --taken: #E2531E;
+  --mine: #0288D1;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --wrap: 1120px;
+  --gutter: clamp(16px, 4vw, 40px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #09161F; --surface: #0F2230; --ink: #E6F0F5; --muted: #8DA7B7; --line: #1C3546;
+    --court: #164C7E; --court-deep: #0F3858; --on-court: #FFFFFF; --accent: #40C4FF;
+    --free: #2BD889; --taken: #FF7A45; --mine: #40C4FF; color-scheme: dark;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: var(--text); background: #fff; line-height: 1.6; }
-  a { color: var(--primary-d); text-decoration: none; }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-  h2 { font-size: 30px; color: var(--bg); }
+}
+:root[data-theme="dark"] {
+  --bg: #09161F; --surface: #0F2230; --ink: #E6F0F5; --muted: #8DA7B7; --line: #1C3546;
+  --court: #164C7E; --court-deep: #0F3858; --on-court: #FFFFFF; --accent: #40C4FF;
+  --free: #2BD889; --taken: #FF7A45; --mine: #40C4FF; color-scheme: dark;
+}
 
-  /* store buttons */
-  .stores { display: flex; gap: 14px; flex-wrap: wrap; }
-  .store {
-    display: inline-flex; align-items: center; gap: 11px; background: #0d1722; color: #fff;
-    padding: 11px 18px; border-radius: 12px; transition: transform .15s, box-shadow .15s; border: 1px solid #25323d;
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 400 17px/1.6 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(30px, 4.4vw, 48px); line-height: 1.04; font-weight: 800; font-variation-settings: "wdth" 112; letter-spacing: -0.01em; }
+h3 { font-size: 21px; line-height: 1.2; font-weight: 700; font-variation-settings: "wdth" 106; }
+p { margin: 0; }
+.lede { color: var(--muted); font-size: 19px; max-width: 34em; }
+.label {
+  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ---------- Barra superior ---------- */
+.top {
+  position: absolute; inset: 0 0 auto 0; z-index: 3;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--on-court); text-decoration: none;
+  font-family: var(--font-display); font-weight: 800; font-size: 20px; font-variation-settings: "wdth" 118; letter-spacing: 0.01em; }
+.brand img { width: 36px; height: 36px; border-radius: 9px; box-shadow: 0 0 0 1px rgb(255 255 255 / .22), 0 6px 14px -6px rgb(0 0 0 / .5); }
+.top nav { display: flex; gap: 22px; font-size: 15px; }
+.top nav a { color: color-mix(in srgb, var(--on-court) 82%, transparent); text-decoration: none; }
+.top nav a:hover { color: var(--on-court); }
+
+/* ---------- Hero: la pista ---------- */
+.hero { position: relative; background: var(--court); color: var(--on-court); overflow: hidden; isolation: isolate; }
+.hero::before { /* textura de césped artificial, muy sutil */
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .5;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 3px, rgb(255 255 255 / .018) 3px 4px),
+    radial-gradient(120% 90% at 75% 40%, transparent 40%, var(--court-deep) 100%);
+}
+.court-lines { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; }
+.court-lines * { fill: none; stroke: rgb(255 255 255 / .55); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.court-lines .net { stroke: rgb(255 255 255 / .9); stroke-width: 3; stroke-dasharray: 2 5; }
+.court-lines .glass { stroke: rgb(255 255 255 / .16); stroke-width: 10; }
+
+.hero .wrap {
+  display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: end; gap: 40px;
+  padding-top: calc(110px + env(safe-area-inset-top, 0px)); padding-bottom: 0;
+}
+.hero-copy { padding-bottom: 88px; min-width: 0; }
+.hero h1 {
+  font-size: clamp(38px, 5.6vw, 72px); line-height: .96; font-weight: 900;
+  font-variation-settings: "wdth" 120; letter-spacing: -0.015em; text-transform: uppercase;
+}
+.hero h1 em { font-style: normal; color: #9EE6FF; }
+.hero .sub { margin-top: 24px; font-size: 19px; max-width: 27em; color: rgb(255 255 255 / .86); }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.store {
+  display: inline-flex; align-items: center; gap: 10px; padding: 11px 18px 11px 14px; border-radius: 12px;
+  background: #FFFFFF; color: #0C2231; text-decoration: none; line-height: 1.15;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.store:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgb(0 0 0 / .25); }
+.store svg { width: 24px; height: 24px; flex: none; }
+.store small { display: block; font-size: 11px; color: #4E6A7C; }
+.store b { font-family: var(--font-display); font-size: 17px; font-weight: 700; font-variation-settings: "wdth" 105; }
+.admin-line { margin-top: 22px; font-size: 15px; color: rgb(255 255 255 / .78); }
+.admin-line a { color: #FFFFFF; text-underline-offset: 3px; }
+
+.hero-phone { position: relative; justify-self: center; width: min(330px, 100%); }
+.phone {
+  border-radius: 38px; padding: 9px; background: #0B1820;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / .12), 0 40px 80px -20px rgb(0 0 0 / .55);
+}
+.phone img { border-radius: 30px; width: 100%; aspect-ratio: 1320 / 2868; object-fit: cover; }
+.hero .hero-phone .device { width: 100%; margin-bottom: 0; border-radius: 56px 56px 0 0; padding: 12px 12px 0; box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / .16), 0 40px 80px -20px rgb(0 0 0 / .55); }
+.hero .hero-phone .device::before { box-shadow: 0 calc(330px * .2) 0 #2A363F; }
+.hero .hero-phone .device img { aspect-ratio: 1320 / 2100; object-fit: cover; object-position: top; border-radius: 45px 45px 0 0; }
+.marker {
+  position: absolute; z-index: 2; left: -64px; top: 92px; display: grid; gap: 2px;
+  background: #FFFFFF; color: #0C2231; border-radius: 14px; padding: 12px 16px 12px 14px;
+  box-shadow: 0 18px 40px -12px rgb(0 0 0 / .45); font-size: 13px; line-height: 1.3;
+}
+.marker .row { display: flex; align-items: center; gap: 8px; }
+.marker .dot { width: 9px; height: 9px; border-radius: 50%; background: #0A9F5A; box-shadow: 0 0 0 4px rgb(10 159 90 / .18); }
+.marker b { font-family: var(--font-mono); font-weight: 500; font-size: 15px; font-variant-numeric: tabular-nums; }
+.marker span { color: #4E6A7C; }
+
+/* ---------- Secciones ---------- */
+section { padding-block: clamp(72px, 10vw, 120px); }
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 80px); align-items: center; }
+.stack { display: grid; gap: 18px; align-content: start; min-width: 0; }
+
+/* Pantalla de reservas de la app, recreada y jugable */
+.try { display: grid; justify-items: center; gap: 14px; min-width: 0; }
+.try .device { width: min(340px, 100%); margin-bottom: 0; }
+.try-hint { font-size: 14px; color: var(--muted); display: flex; align-items: center; gap: 8px; text-align: center; }
+.try-hint::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--free); box-shadow: 0 0 0 4px color-mix(in srgb, var(--free) 22%, transparent); flex: none; }
+.app {
+  position: relative; overflow: hidden; aspect-ratio: 1320 / 2868; border-radius: 37px;
+  background: linear-gradient(180deg, #2F393E 0%, #22303F 30%, #1A2942 70%, #27324C 100%);
+  color: #FFFFFF; font: 400 12px/1.3 "Roboto", system-ui, sans-serif; container-type: inline-size;
+}
+.app-scroll { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; padding-bottom: 18px; }
+.app-scroll::-webkit-scrollbar { display: none; }
+.app-status { display: flex; align-items: center; justify-content: space-between; padding: 13px 24px 6px 30px; font: 600 13.5px/1 system-ui, -apple-system, sans-serif; }
+.app-island { width: 30%; height: 22px; border-radius: 999px; background: #000; }
+.app-status svg { width: 42px; height: 12px; }
+.app-bar { display: flex; align-items: center; gap: 10px; padding: 8px 14px 6px; background: rgb(255 255 255 / .03); border-bottom: 1px solid rgb(255 255 255 / .05); }
+.app-bar svg { width: 18px; height: 18px; flex: none; opacity: .8; }
+.app-bar b { display: block; font: 700 17px/1.1 "Montserrat", system-ui, sans-serif; }
+.app-bar small { font-size: 9.5px; color: rgb(255 255 255 / .55); }
+.app h4 { margin: 0; display: flex; align-items: center; justify-content: center; gap: 6px; font: 600 15.5px/1.2 "Montserrat", system-ui, sans-serif; }
+.app h4 svg { width: 14px; height: 14px; color: #40C4FF; }
+.app-dates { display: flex; justify-content: center; gap: 8px; margin: 8px 0 14px; }
+.app-date { display: grid; justify-items: center; gap: 1px; width: 52px; padding: 6px 0 5px; border-radius: 9px; cursor: pointer; font: 500 9px/1.1 "Roboto", sans-serif; color: rgb(255 255 255 / .7);
+  background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .18); }
+.app-date strong { font-size: 16px; font-weight: 500; color: #FFFFFF; }
+.app-date em { font-style: normal; font-size: 7px; padding: 1px 5px; border-radius: 4px; background: rgb(64 196 255 / .2); color: #40C4FF; }
+.app-date[aria-pressed="true"] em { background: rgb(255 255 255 / .9); color: #0B7A55; }
+.app-date[aria-pressed="true"] { background: linear-gradient(135deg, #00E676, #40C4FF); border-color: #00E676; color: #FFFFFF; box-shadow: 0 4px 14px -4px rgb(0 230 118 / .6); }
+.app-court { display: block; margin: 8px auto 12px; padding: 7px 10px; border-radius: 10px; font: 500 10.5px/1 "Roboto", sans-serif; color: #fff; background: linear-gradient(135deg, #00E676, #40C4FF); border: 1px solid #00E676; width: max-content; }
+.app-active { margin: 0 10px 12px; padding: 10px 10px 10px; border-radius: 13px; background: rgb(0 0 0 / .14); border: 1px solid rgb(76 175 80 / .45); display: grid; gap: 9px; }
+.app-active[hidden] { display: none !important; }
+.app-active .row { display: grid; grid-template-columns: 24px minmax(0, 1fr) 12px; align-items: center; gap: 9px; }
+.app-active .ok { width: 24px; height: 24px; border-radius: 50%; background: rgb(76 175 80 / .3); display: grid; place-items: center; }
+.app-active .ok svg { width: 13px; height: 13px; }
+.app-active b { display: block; font: 600 12px/1.2 "Montserrat", sans-serif; }
+.app-active span { font-size: 10.5px; color: rgb(255 255 255 / .62); }
+.app-active > button { all: unset; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px; border-radius: 9px; background: #FF5722; font: 500 11.5px/1 "Roboto", sans-serif; box-shadow: 0 6px 14px -6px rgb(255 87 34 / .7); }
+.app-active > button:focus-visible { outline: 2px solid #fff; }
+.app-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 12px 10px 0; }
+.app-slot { all: unset; box-sizing: border-box; cursor: pointer; display: grid; justify-items: center; gap: 3px; padding: 11px 4px 10px; border-radius: 10px; text-align: center;
+  background: rgb(43 63 66 / .75); border: 1px solid rgb(76 175 80 / .45); transition: transform .12s ease, background-color .15s; }
+.app-slot:focus-visible { outline: 2px solid #40C4FF; outline-offset: 1px; }
+.app-slot:hover { transform: translateY(-1px); }
+.app-slot .t { display: flex; align-items: center; gap: 5px; font: 500 12.5px/1 "Roboto", sans-serif; font-variant-numeric: tabular-nums; }
+.app-slot .t svg { width: 11px; height: 11px; flex: none; }
+.app-slot small { font-size: 9.5px; color: rgb(255 255 255 / .85); }
+.app-slot[data-s="mia"] { background: #40C4FF; border-color: #40C4FF; box-shadow: 0 6px 16px -6px rgb(64 196 255 / .7); }
+.app-slot[data-s="ocupada"] { background: rgb(255 87 34 / .28); border-color: #FF5722; cursor: not-allowed; }
+.app-slot[data-s="comida"] { background: rgb(30 64 108 / .7); border-color: rgb(64 140 220 / .45); cursor: not-allowed; }
+.app-slot[data-s="comida"] .t, .app-slot[data-s="comida"] small { color: rgb(255 255 255 / .55); }
+.app-slot[data-s="ocupada"]:hover, .app-slot[data-s="comida"]:hover { transform: none; }
+.app-modal { position: absolute; inset: 0; display: grid; place-items: center; padding: 18px; background: rgb(8 14 22 / .55); backdrop-filter: blur(2px); }
+.app-modal[hidden] { display: none !important; }
+.app-dialog { width: 100%; display: grid; justify-items: center; gap: 9px; padding: 18px 14px 14px; border-radius: 16px; background: #2B3A40; border: 1px solid rgb(0 230 118 / .35); text-align: center; box-shadow: 0 20px 40px -10px rgb(0 0 0 / .6); animation: pop .18s ease-out; }
+@keyframes pop { from { transform: scale(.94); opacity: .4; } }
+.app-dialog .ico { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #00E676, #40C4FF); }
+.app-dialog .ico svg { width: 20px; height: 20px; }
+.app-dialog b { font: 700 14.5px/1.2 "Montserrat", sans-serif; }
+.app-dialog p { font-size: 11px; color: rgb(255 255 255 / .8); }
+.app-dialog p em { font-style: normal; color: #00E676; font-weight: 500; }
+.app-dialog p i { font-style: normal; color: #40C4FF; font-weight: 500; }
+.app-dialog .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-top: 4px; }
+.app-dialog button { all: unset; cursor: pointer; padding: 9px 0; border-radius: 9px; font: 500 11px/1 "Roboto", sans-serif; text-align: center; }
+.app-dialog .no { border: 1px solid rgb(255 255 255 / .3); }
+.app-dialog .yes { background: linear-gradient(135deg, #00E676, #40C4FF); }
+.app-dialog button:focus-visible { outline: 2px solid #fff; }
+.app-toast { position: absolute; left: 10px; right: 10px; bottom: 14px; padding: 9px 11px; border-radius: 10px; background: #37474F; font-size: 10.5px; box-shadow: 0 8px 20px -8px rgb(0 0 0 / .6); }
+.app-toast[hidden] { display: none !important; }
+
+.facts { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 6px; font-size: 15px; color: var(--muted); }
+.facts b { font-family: var(--font-mono); font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* Comunidad: tres móviles */
+.community { background: var(--surface); border-block: 1px solid var(--line); }
+.community-head { display: grid; gap: 18px; max-width: 640px; margin-bottom: 56px; }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); }
+.trio article { display: grid; gap: 16px; align-content: start; min-width: 0; }
+.device {
+  position: relative; width: min(250px, 100%); margin-bottom: 8px;
+  border-radius: 46px; padding: 10px;
+  background: linear-gradient(145deg, #3B4A55, #10181E 45%, #2A363F);
+  box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / .14), 0 0 0 1px rgb(12 34 49 / .25), 0 34px 60px -30px rgb(12 34 49 / .55);
+}
+.device::before, .device::after { /* botones laterales */
+  content: ""; position: absolute; width: 3px; border-radius: 2px; background: #2A363F;
+}
+.device::before { left: -3px; top: 21%; height: 9%; box-shadow: 0 calc(250px * .2) 0 #2A363F; }
+.device::after { right: -3px; top: 27%; height: 14%; }
+.device img { width: 100%; aspect-ratio: 1320 / 2868; border-radius: 37px; background: #0B1820; }
+.trio p { color: var(--muted); font-size: 16px; }
+.states { display: flex; flex-wrap: wrap; gap: 6px; }
+.state { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .04em; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.state.on { border-color: var(--taken); color: var(--taken); }
+
+/* Fiabilidad */
+.reliable { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: clamp(32px, 6vw, 80px); align-items: start; }
+.points { display: grid; gap: 0; list-style: none; margin: 0; padding: 0; }
+.points li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; padding-block: 22px; border-top: 1px solid var(--line); }
+.points li:last-child { border-bottom: 1px solid var(--line); }
+.points svg { width: 28px; height: 28px; color: var(--accent); margin-top: 2px; }
+.points p { color: var(--muted); font-size: 16px; margin-top: 4px; }
+
+/* Cómo se entra */
+.steps-sec { background: var(--court); color: var(--on-court); position: relative; overflow: hidden; }
+.steps-sec .label { color: #9EE6FF; }
+.steps-sec .lede { color: rgb(255 255 255 / .8); }
+.steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); counter-reset: s; }
+.steps li { counter-increment: s; position: relative; padding: 0 20px 0 0; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.steps li::before {
+  content: counter(s); font: 900 56px/1 var(--font-display); font-variation-settings: "wdth" 125;
+  color: transparent; -webkit-text-stroke: 1.5px rgb(255 255 255 / .75);
+}
+.steps li::after { content: ""; position: absolute; top: 28px; left: 56px; right: 20px; border-top: 2px dashed rgb(255 255 255 / .3); }
+.steps li:last-child::after { display: none; }
+.steps h3 { font-size: 19px; }
+.steps p { color: rgb(255 255 255 / .78); font-size: 15.5px; }
+
+/* Administradores */
+.admin { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+.mailbox {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 16px 16px 20px;
+}
+.mailbox code { font: 500 clamp(15px, 2.2vw, 18px)/1.2 var(--font-mono); user-select: all; overflow-wrap: anywhere; min-width: 0; }
+.btn {
+  font: 600 14px/1 var(--font-body); padding: 11px 16px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--ink); background: var(--ink); color: var(--bg);
+}
+.btn:hover { opacity: .88; }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px)); font-size: 14px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: space-between; align-items: center; }
+footer nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--ink); }
+
+
+/* Preguntas frecuentes */
+.faq-list { display: grid; gap: 0; }
+.faq-list details { border-top: 1px solid var(--line); }
+.faq-list details:last-child { border-bottom: 1px solid var(--line); }
+.faq-list summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 18px;
+  font: 700 18px/1.3 var(--font-display); font-variation-settings: "wdth" 106; }
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after { content: "+"; font: 500 22px/1 var(--font-mono); color: var(--accent); transition: transform .2s ease; }
+.faq-list details[open] summary::after { transform: rotate(45deg); }
+.faq-list p { color: var(--muted); padding-bottom: 18px; max-width: 46em; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .hero-copy { padding-bottom: 40px; }
+  .hero-phone { width: min(280px, 80%); }
+  .marker { left: -40px; top: 60px; }
+  .split, .reliable, .admin { grid-template-columns: minmax(0, 1fr); }
+  .trio {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(250px, 74%);
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter);
+    padding-block: 4px 12px; gap: 20px;
   }
-  .store:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.35); color:#fff; }
-  .store svg { width: 26px; height: 26px; flex: none; fill: #fff; }
-  .store .s-small { font-size: 11px; color: #b0bec5; line-height: 1.1; }
-  .store .s-big { font-size: 17px; font-weight: 600; line-height: 1.1; }
-
-  header.nav { position: sticky; top: 0; z-index: 20; background: rgba(38,50,56,.92); backdrop-filter: blur(8px); }
-  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-  .logo { font-size: 22px; font-weight: 800; color: #fff; }
-  .logo span { color: var(--primary); }
-  .nav a.link { color: #cfd8dc; margin-left: 22px; font-size: 15px; }
-  .nav a.link:hover { color: #fff; }
-  @media (max-width: 720px) { .nav .links { display: none; } }
-
-  .hero { background: linear-gradient(160deg, #263238 0%, #1A2A44 60%, #2E3B55 100%); color: #fff; padding: 72px 0 92px; }
-  .hero .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
-  .hero h1 { font-size: 45px; line-height: 1.13; margin-bottom: 18px; }
-  .hero h1 b { color: var(--primary); }
-  .hero p.lead { font-size: 19px; color: #cfd8dc; margin-bottom: 28px; max-width: 540px; }
-  .phone { justify-self: center; width: 270px; aspect-ratio: 9/19; border-radius: 34px; background: #0d1722; border: 8px solid #0d1722; box-shadow: 0 30px 70px rgba(0,0,0,.5); overflow: hidden; }
-  .phone img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .ph-fallback, .sh-fallback { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#5b7488; font-size:14px; text-align:center; padding:18px; background: repeating-linear-gradient(45deg,#10202c,#10202c 12px,#13242f 12px,#13242f 24px); }
-  @media (max-width: 860px) { .hero .grid { grid-template-columns: 1fr; text-align: center; } .hero p.lead { margin: 0 auto 28px; } .hero .stores { justify-content: center; } .hero h1 { font-size: 34px; } }
-
-  section.feat { padding: 70px 0; }
-  section.feat.alt { background: #F7FAFC; }
-  .feat .row { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
-  .feat .row.rev .txt { order: 2; }
-  .feat h2 { margin-bottom: 14px; }
-  .feat p { font-size: 17px; color: #455a64; margin-bottom: 14px; }
-  .feat ul { margin-left: 4px; list-style: none; }
-  .feat li { font-size: 16px; margin-bottom: 10px; padding-left: 28px; position: relative; }
-  .feat li::before { content: '✓'; position: absolute; left: 0; color: var(--primary-d); font-weight: 800; }
-  .shot { justify-self: center; width: 258px; aspect-ratio: 9/19; border-radius: 32px; overflow: hidden; background: #0d1722; border: 8px solid #0d1722; box-shadow: 0 24px 60px rgba(38,50,56,.28); }
-  .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  @media (max-width: 760px) { .feat .row, .feat .row.rev .txt { grid-template-columns: 1fr; order: 0; } .feat .row { gap: 26px; } }
-
-  /* galería */
-  .gallery { padding: 60px 0; text-align: center; }
-  .gallery h2 { margin-bottom: 34px; }
-  .gallery .strip { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; }
-  .gphone { width: 210px; aspect-ratio: 9/19; border-radius: 26px; background: #0d1722; border: 7px solid #0d1722; overflow: hidden; box-shadow: 0 16px 40px rgba(38,50,56,.22); }
-  .gphone img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-  .steps { background: var(--bg); color: #fff; padding: 70px 0; text-align: center; }
-  .steps h2 { color:#fff; margin-bottom: 40px; }
-  .steps .grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
-  .step { background: rgba(255,255,255,.06); border-radius: 16px; padding: 26px 18px; }
-  .step .n { width: 42px; height: 42px; border-radius: 50%; background: var(--primary); color: #06222e; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
-  .step p { color: #cfd8dc; font-size: 15px; }
-  @media (max-width: 760px) { .steps .grid { grid-template-columns: 1fr 1fr; } }
-
-  /* FAQ */
-  .faq { padding: 70px 0; }
-  .faq h2 { text-align: center; margin-bottom: 30px; }
-  details { border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; max-width: 760px; margin-left:auto; margin-right:auto; }
-  details summary { font-weight: 600; cursor: pointer; color: var(--bg); font-size: 16px; }
-  details p { margin-top: 10px; color: #546e7a; font-size: 15px; }
-
-  .final { padding: 72px 0; text-align: center; background: linear-gradient(160deg,#1A2A44,#2E3B55); color:#fff; }
-  .final h2 { color:#fff; font-size: 32px; margin-bottom: 16px; }
-  .final p { color: #cfd8dc; font-size: 18px; margin-bottom: 26px; }
-  .final .stores { justify-content: center; }
-
-  footer { background: #0d1722; color: #90a4ae; padding: 36px 0; font-size: 14px; }
-  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-  footer a { color: #b0bec5; } footer a:hover { color: #fff; }
+  .trio::-webkit-scrollbar { display: none; }
+  .trio article { scroll-snap-align: start; }
+  .device { width: 100%; }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 36px; }
+  .steps li:nth-child(2)::after { display: none; }
+  .top nav { display: none; }
+  .court-lines line { display: none; }
+}
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .steps { grid-template-columns: minmax(0, 1fr); }
+  .steps li::after { display: none; }
+  .marker { left: -20px; padding: 10px 12px; }
+}
+.to-top {
+  position: fixed; z-index: 10; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  border: 1px solid rgb(255 255 255 / .25); background: var(--court); color: #FFFFFF;
+  box-shadow: 0 12px 28px -10px rgb(0 0 0 / .5); opacity: 0; transform: translateY(12px); pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { background: var(--court-deep); }
+.to-top svg { width: 22px; height: 22px; }
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
 </style>
 </head>
 <body>
 
-<header class="nav">
+<header class="top">
   <div class="wrap">
-    <div class="logo">Urba<span>Padel</span></div>
-    <nav class="links">
-      <a class="link" href="#reservas">Reservas</a>
-      <a class="link" href="#comunidad">Comunidad</a>
-      <a class="link" href="#como">Cómo entrar</a>
-      <a class="link" href="/onboarding/">Guía</a>
-      <a class="link" href="#faq">FAQ</a>
-      <a class="link" href="#descargar">Descargar</a>
+    <a class="brand" href="#">
+      <img src="img/logo.png" alt="" width="36" height="36">
+      URBAPADEL
+    </a>
+    <nav aria-label="Secciones">
+      <a href="#reservas">Reservas</a>
+      <a href="#comunidad">Comunidad</a>
+      <a href="#como">Cómo se entra</a>
+      <a href="#faq">Preguntas</a>
+      <a href="#admins">Administradores</a>
+      <a href="/onboarding/">Guía</a>
     </nav>
   </div>
 </header>
 
-<section class="hero">
-  <div class="wrap grid">
-    <div>
-      <h1>Las reservas de tu urbanización, <b>en una app</b>.</h1>
-      <p class="lead">Reserva la pista de pádel y las salas de tu comunidad,
-        reporta incidencias y recibe los comunicados de la administración. Todo
-        desde el móvil, sin grupos de mensajería ni listas en papel.</p>
-      <div class="stores">
-        <a class="store" href="https://apps.apple.com/es/app/urbapadel/id6743709716" aria-label="Descargar en App Store">
-          <svg viewBox="0 0 384 512"><path d="M318.7 268c-.2-37 16.7-65 50.6-85.7-19-27.2-47.5-42.2-85.1-45-35.9-2.8-75.1 21-89.6 21-15.2 0-49.9-20-77.2-20C61.2 138.4 1.6 184.3 1.6 277.7c0 27.6 5 56.1 15.1 85.4 13.4 38.6 61.9 133.4 112.5 131.9 26.5-.6 45.2-18.8 79.7-18.8 33.5 0 50.8 18.8 79.6 18.8 51.1-.7 95-86.8 107.7-125.5-68.4-32.3-64.6-94.6-64.6-101.5zm-56.9-228c27.4-32.5 24.9-62.1 24.1-72.8-24.2 1.4-52.2 16.5-68.2 35-17.6 19.8-27.9 44.3-25.7 71.5 26.1 2 49.9-11.4 69.8-33.7z"/></svg>
-          <span><span class="s-small">Descárgala en</span><br><span class="s-big">App Store</span></span>
-        </a>
-        <a class="store" href="https://play.google.com/store/apps/details?id=com.rd.urbapadel&hl=es" aria-label="Disponible en Google Play">
-          <svg viewBox="0 0 512 512"><path d="M325.3 234.3 104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l220.7-221.3 60.1 60.1L104.6 499z"/></svg>
-          <span><span class="s-small">Disponible en</span><br><span class="s-big">Google Play</span></span>
-        </a>
+<main>
+  <section class="hero" style="padding-block:0">
+    <!-- Pista de pádel reglamentaria vista desde arriba: 20 × 10 m, líneas de saque a 6,95 m de la red -->
+    <svg class="court-lines" viewBox="0 0 2000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect class="glass" x="0" y="0" width="2000" height="1000"/>
+      <rect x="0" y="0" width="2000" height="1000"/>
+      <line class="net" x1="1000" y1="0" x2="1000" y2="1000"/>
+      <line x1="305" y1="0" x2="305" y2="1000"/>
+      <line x1="1695" y1="0" x2="1695" y2="1000"/>
+      <line x1="305" y1="500" x2="1695" y2="500"/>
+    </svg>
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="label" style="color:#9EE6FF;margin-bottom:18px">Para vecinos de urbanizaciones</p>
+        <h1>Las reservas de tu urba, <em>en una app.</em></h1>
+        <p class="sub">Reserva la pista de pádel y las salas de tu comunidad, reporta incidencias y recibe los comunicados de la administración. Todo desde el móvil, sin grupos de mensajería ni listas en papel.</p>
+        <div class="ctas">
+          <a class="store" href="https://apps.apple.com/es/app/urbapadel/id6743709716" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.5 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.3 1-4.1 2.5-1.8 3.1-.5 7.6 1.3 10.1.8 1.2 1.8 2.6 3.1 2.5 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.4-1-2.4-3.9zM14 5.2c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4z"/></svg>
+            <span><small>Descárgala en el</small><b>App Store</b></span>
+          </a>
+          <a class="store" href="https://play.google.com/store/apps/details?id=com.rd.urbapadel" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0A9F5A" d="M3.6 2.3 13.4 12l-9.8 9.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1z"/><path fill="#F2B90F" d="m17 8.4-3.6 3.6L17 15.6l3.9-2.2c1-.6 1-2 0-2.6z"/><path fill="#E2531E" d="M13.4 12 3.6 21.7c.3.2.8.2 1.2 0L17 15.6z"/><path fill="#0E8FCB" d="M4.8 2.3c-.4-.2-.9-.2-1.2 0L13.4 12 17 8.4z"/></svg>
+            <span><small>Disponible en</small><b>Google Play</b></span>
+          </a>
+        </div>
+        <p class="admin-line">¿Nuevo en la app? <a href="/onboarding/">Mira la guía de bienvenida</a> · ¿Administras una urbanización? <a href="#admins">Escríbenos</a></p>
+      </div>
+      <div class="hero-phone">
+        <div class="marker" aria-hidden="true">
+          <div class="row"><i class="dot"></i><b>18:00–19:30</b></div>
+          <span>Pista 1 · Hoy · Libre</span>
+        </div>
+        <div class="device"><img src="img/inicio.webp" alt="Pantalla de inicio de UrbaPadel con los accesos a Urba y Pádel" width="540" height="1173"></div>
       </div>
     </div>
-    <div class="phone">
-      <img src="img/hero.png" alt="App UrbaPadel reservando una pista de pádel desde el calendario" fetchpriority="high" decoding="async"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-      <div class="ph-fallback" style="display:none;">Captura del móvil<br>(img/hero.png)</div>
+  </section>
+
+  <section id="reservas">
+    <div class="wrap split">
+      <div class="stack">
+        <p class="label">Reservas sin líos</p>
+        <h2>Ves lo que está libre. Lo reservas en dos toques.</h2>
+        <p class="lede">La disponibilidad de la pista se actualiza en tiempo real. Si cambias de planes, cancelas y la hora queda libre para otro vecino. Las salas comunes se reservan igual, con reglas claras por urbanización para que el reparto sea justo.</p>
+        <div class="facts">
+          <span><b>90 min</b> por turno</span>
+          <span><b>1</b> reserva activa por piso</span>
+          <span>Hora marcada por el servidor</span>
+        </div>
+      </div>
+
+      <div class="try">
+        <div class="device">
+          <div class="app" id="app" aria-label="Pantalla de reservas de la app, de ejemplo">
+            <div class="app-scroll">
+              <div class="app-status" aria-hidden="true">
+                <span>17:56</span><span class="app-island"></span>
+                <svg viewBox="0 0 42 12"><g fill="#fff"><rect x="0" y="5" width="2.5" height="2.5" rx="1" opacity=".5"/><rect x="4" y="5" width="2.5" height="2.5" rx="1" opacity=".5"/><rect x="8" y="5" width="2.5" height="2.5" rx="1" opacity=".5"/><path d="M19 4.2a7 7 0 0 1 9 0l-1.1 1.2a5.4 5.4 0 0 0-6.8 0zM21.1 6.5a3.8 3.8 0 0 1 4.8 0L23.5 9z"/><rect x="31" y="2" width="10" height="7" rx="2"/></g></svg>
+              </div>
+              <div class="app-bar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+                <div><b>Reservas</b><small>Gestiona tu tiempo</small></div>
+              </div>
+              <div style="padding-top:12px">
+                <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Selecciona fecha</h4>
+                <div class="app-dates" id="app-dates"></div>
+                <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="14" cy="9" r="5.5"/><path d="M10 13l-6 6"/><circle cx="19.5" cy="19.5" r="2"/></svg>Pistas Disponibles</h4>
+                <span class="app-court">Pista 1</span>
+                <div class="app-active" id="app-active" hidden>
+                  <div class="row">
+                    <span class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+                    <div><b>Tu Reserva Activa</b><span id="app-active-txt"></span></div>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  </div>
+                  <button type="button" id="app-cancel"><svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7" stroke="#FF5722" stroke-width="2.6" stroke-linecap="round"/></svg>Cancelar Reserva</button>
+                </div>
+                <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Horarios disponibles</h4>
+                <div class="app-slots" id="app-slots"></div>
+              </div>
+            </div>
+            <div class="app-modal" id="app-modal" hidden>
+              <div class="app-dialog" role="dialog" aria-modal="true" aria-labelledby="app-dlg-t">
+                <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="14" cy="9" r="5.5"/><path d="M10 13l-6 6"/><circle cx="19.5" cy="19.5" r="2"/></svg></span>
+                <b id="app-dlg-t">¡Horario Disponible!</b>
+                <p id="app-dlg-p"></p>
+                <p>🎾 ¡Prepárate para disfrutar del pádel!</p>
+                <div class="btns"><button type="button" class="no" id="app-no">Cancelar</button><button type="button" class="yes" id="app-yes">Reservar</button></div>
+              </div>
+            </div>
+            <div class="app-toast" id="app-toast" role="status" hidden></div>
+          </div>
+        </div>
+        <p class="try-hint">Pruébalo: toca una hora disponible</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section style="background:#fff;padding:34px 0 6px;text-align:center;">
-  <div class="wrap">
-    <p style="font-size:17px;color:#546e7a;max-width:840px;margin:0 auto;">
-      <b>UrbaPadel</b> es la app para <b>reservar la pista de pádel</b> y las
-      instalaciones comunes de tu urbanización o comunidad de vecinos —salas,
-      incidencias y comunicados— en un mismo sitio. Gratis para los vecinos,
-      disponible para iPhone y Android.
-    </p>
-  </div>
-</section>
+  <section class="community" id="comunidad">
+    <div class="wrap">
+      <div class="community-head">
+        <p class="label">Tu comunidad, ordenada</p>
+        <h2>Lo que antes iba por el grupo de WhatsApp, ahora tiene su sitio.</h2>
+      </div>
+      <div class="trio">
+        <article>
+          <div class="device"><img src="img/comunicados.webp" alt="Pantalla de comunicados con un aviso de la administración" loading="lazy" width="540" height="1173"></div>
+          <h3>Comunicados</h3>
+          <p>La administración publica avisos y circulares y te llegan al móvil. La información importante ya no se pierde entre mensajes.</p>
+        </article>
+        <article>
+          <div class="device"><img src="img/incidencias.webp" alt="Pantalla de incidencias con una avería abierta" loading="lazy" width="540" height="1173"></div>
+          <h3>Incidencias</h3>
+          <p>Reporta una avería de la zona común y sigue su estado hasta que el responsable la cierre.</p>
+          <div class="states" aria-label="Estados de una incidencia"><span class="state on">Abierta</span><span class="state">En trámite</span><span class="state">Resuelta</span></div>
+        </article>
+        <article>
+          <div class="device"><img src="img/salas.webp" alt="Pantalla de reserva de la sala de juntas" loading="lazy" width="540" height="1173"></div>
+          <h3>Salas comunes</h3>
+          <p>Sala de juntas o de usos múltiples, con sus franjas y sus límites por vecino. Tu urbanización y tu piso, siempre a la vista en tu perfil.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<section class="feat" id="reservas">
-  <div class="wrap row">
-    <div class="txt">
-      <h2>Reservas sin líos</h2>
-      <p>Consulta la disponibilidad real de la pista a tiempo real y reserva tu
-        hora en dos toques. Cancela cuando lo necesites.</p>
-      <ul>
-        <li>Disponibilidad en tiempo real, sin solapamientos</li>
-        <li>Salas comunes (juntas, usos múltiples) también reservables</li>
-        <li>Reglas por urbanización: límites por vecino y por piso</li>
-        <li>La hora la marca el servidor, no tu móvil</li>
+  <section>
+    <div class="wrap reliable">
+      <div class="stack">
+        <p class="label">Pensada para que funcione</p>
+        <h2>Sin desajustes y sin sustos.</h2>
+      </div>
+      <ul class="points">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <div><h3>La hora la marca el servidor</h3><p>No depende del reloj de tu móvil. Todos ven el mismo cuadrante y nadie reserva una hora que ya ha pasado.</p></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+          <div><h3>Avisos cuando importa</h3><p>Te llega una notificación con cada comunicado nuevo y con los cambios en tus reservas.</p></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+          <div><h3>Solo residentes</h3><p>Cada cuenta se verifica y el administrador confirma que eres vecino antes de activar el acceso.</p></div>
+        </li>
       </ul>
     </div>
-    <div class="shot">
-      <img src="img/reservas.png" alt="Pantalla de reservas de pista de pádel en UrbaPadel" loading="lazy" decoding="async"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-      <div class="sh-fallback" style="display:none;">img/reservas.png</div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="feat alt" id="comunidad">
-  <div class="wrap row rev">
-    <div class="txt">
-      <h2>Tu comunidad, ordenada</h2>
-      <p>Toda la información de la urbanización en un sitio, a mano de todos.</p>
-      <ul>
-        <li><b>Comunicados:</b> los avisos de la administración te llegan a la app</li>
-        <li><b>Incidencias:</b> reporta una avería y sigue su estado hasta resolverse</li>
-        <li><b>Perfil:</b> tu urbanización y tu piso siempre a la vista</li>
-        <li>Avisos de novedades para no perderte nada</li>
-      </ul>
+  <section class="steps-sec" id="como">
+    <div class="wrap">
+      <p class="label">¿Cómo se entra?</p>
+      <h2 style="margin-top:14px">De la descarga a la pista en cuatro pasos.</h2>
+      <ol class="steps">
+        <li><h3>Tu comunidad se da de alta</h3><p>La administración de la urbanización nos escribe y configuramos pistas, salas y pisos.</p></li>
+        <li><h3>Te registras</h3><p>Con tu email y tu piso, por ejemplo Chalet 10 o 28-5-A.</p></li>
+        <li><h3>El administrador te valida</h3><p>Comprueba que eres residente y activa tu acceso.</p></li>
+        <li><h3>A reservar</h3><p>Ya puedes coger pista, salas y seguir los avisos de tu urba.</p></li>
+      </ol>
     </div>
-    <div class="shot">
-      <img src="img/comunidad.png" alt="Comunicados e incidencias de la comunidad en UrbaPadel" loading="lazy" decoding="async"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-      <div class="sh-fallback" style="display:none;">img/comunidad.png</div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="gallery">
-  <div class="wrap">
-    <h2>Así se ve UrbaPadel</h2>
-    <div class="strip">
-      <div class="gphone"><img src="img/screen-1.png" alt="UrbaPadel: inicio con accesos a Urba y Pádel" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none';"></div>
-      <div class="gphone"><img src="img/screen-2.png" alt="UrbaPadel: reserva de salas de juntas" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none';"></div>
-      <div class="gphone"><img src="img/screen-3.png" alt="UrbaPadel: incidencias de la comunidad" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none';"></div>
-      <div class="gphone"><img src="img/screen-4.png" alt="UrbaPadel: comunicados de la administración" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none';"></div>
+  <section id="faq">
+    <div class="wrap reliable">
+      <div class="stack">
+        <p class="label">Preguntas frecuentes</p>
+        <h2>Lo que más nos preguntan.</h2>
+      </div>
+      <div class="faq-list">
+        <details><summary>¿Cuánto cuesta UrbaPadel para los vecinos?</summary><p>El uso de la app es totalmente gratuito para los vecinos. El servicio lo contrata la comunidad de propietarios.</p></details>
+        <details><summary>¿Cómo consigo acceso a mi urbanización?</summary><p>Te registras con tu email y tu piso, y el administrador de la comunidad valida que eres residente antes de activar tu acceso.</p></details>
+        <details><summary>¿Qué se puede reservar?</summary><p>La pista de pádel y otras instalaciones comunes como salas de juntas o usos múltiples, según lo que tenga habilitado cada urbanización.</p></details>
+        <details><summary>¿Está disponible para iPhone y Android?</summary><p>Sí, UrbaPadel está disponible en App Store y Google Play, gratis.</p></details>
+        <details><summary>¿Mi comunidad todavía no la usa, qué hago?</summary><p>Escríbenos a contacto@urbapadel.com y te contamos cómo darla de alta.</p></details>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="steps" id="como">
-  <div class="wrap">
-    <h2>¿Cómo se entra?</h2>
-    <div class="grid">
-      <div class="step"><div class="n">1</div><p>Tu comunidad se da de alta en UrbaPadel.</p></div>
-      <div class="step"><div class="n">2</div><p>Te registras con tu email y tu piso.</p></div>
-      <div class="step"><div class="n">3</div><p>El administrador valida que eres residente.</p></div>
-      <div class="step"><div class="n">4</div><p>Listo: a reservar desde el móvil.</p></div>
+  <section id="admins">
+    <div class="wrap admin">
+      <div class="stack">
+        <p class="label">Para administradores</p>
+        <h2>¿Quieres UrbaPadel en tu urbanización?</h2>
+        <p class="lede">Cuéntanos cuántas pistas y salas tenéis y te explicamos cómo dar de alta a la comunidad.</p>
+      </div>
+      <div class="mailbox">
+        <code id="mail">contacto@urbapadel.com</code>
+        <button class="btn" id="copy" type="button">Copiar email</button>
+      </div>
     </div>
-  </div>
-</section>
-
-<section class="faq" id="faq">
-  <div class="wrap">
-    <h2>Preguntas frecuentes</h2>
-    <details><summary>¿Cuánto cuesta UrbaPadel para los vecinos?</summary><p>El uso de la app es totalmente gratuito para los vecinos. El servicio lo contrata la comunidad de propietarios.</p></details>
-    <details><summary>¿Cómo consigo acceso a mi urbanización?</summary><p>Te registras con tu email y tu piso, y el administrador de la comunidad valida que eres residente antes de activar tu acceso.</p></details>
-    <details><summary>¿Qué se puede reservar?</summary><p>La pista de pádel y otras instalaciones comunes como salas de juntas o usos múltiples, según lo que tenga habilitado cada urbanización.</p></details>
-    <details><summary>¿Está disponible para iPhone y Android?</summary><p>Sí, UrbaPadel está disponible en App Store y Google Play, gratis.</p></details>
-    <details><summary>¿Mi comunidad todavía no la usa, qué hago?</summary><p>Escríbenos a contacto@urbapadel.com y te contamos cómo darla de alta.</p></details>
-  </div>
-</section>
-
-<section class="final" id="descargar">
-  <div class="wrap">
-    <h2>Descarga UrbaPadel</h2>
-    <p>Gratis para los vecinos. Disponible para iPhone y Android.</p>
-    <div class="stores">
-      <a class="store" href="https://apps.apple.com/es/app/urbapadel/id6743709716" aria-label="Descargar en App Store">
-        <svg viewBox="0 0 384 512"><path d="M318.7 268c-.2-37 16.7-65 50.6-85.7-19-27.2-47.5-42.2-85.1-45-35.9-2.8-75.1 21-89.6 21-15.2 0-49.9-20-77.2-20C61.2 138.4 1.6 184.3 1.6 277.7c0 27.6 5 56.1 15.1 85.4 13.4 38.6 61.9 133.4 112.5 131.9 26.5-.6 45.2-18.8 79.7-18.8 33.5 0 50.8 18.8 79.6 18.8 51.1-.7 95-86.8 107.7-125.5-68.4-32.3-64.6-94.6-64.6-101.5zm-56.9-228c27.4-32.5 24.9-62.1 24.1-72.8-24.2 1.4-52.2 16.5-68.2 35-17.6 19.8-27.9 44.3-25.7 71.5 26.1 2 49.9-11.4 69.8-33.7z"/></svg>
-        <span><span class="s-small">Descárgala en</span><br><span class="s-big">App Store</span></span>
-      </a>
-      <a class="store" href="https://play.google.com/store/apps/details?id=com.rd.urbapadel&hl=es" aria-label="Disponible en Google Play">
-        <svg viewBox="0 0 512 512"><path d="M325.3 234.3 104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l220.7-221.3 60.1 60.1L104.6 499z"/></svg>
-        <span><span class="s-small">Disponible en</span><br><span class="s-big">Google Play</span></span>
-      </a>
-    </div>
-    <p style="margin-top:22px;font-size:15px;">¿Tu comunidad aún no la usa?
-      Escríbenos a <a href="mailto:contacto@urbapadel.com" style="color:#fff;text-decoration:underline;">contacto@urbapadel.com</a></p>
-  </div>
-</section>
+  </section>
+</main>
 
 <footer>
   <div class="wrap">
-    <div>© UrbaPadel · <a href="mailto:contacto@urbapadel.com">contacto@urbapadel.com</a></div>
-    <div>
-      <a href="/onboarding/">Guía de bienvenida</a> ·
-      <a href="privacidad.html">Política de Privacidad</a> ·
+    <span>© UrbaPadel</span>
+    <nav aria-label="Legal">
+      <a href="/onboarding/">Guía de bienvenida</a>
+      <a href="privacidad.html">Política de Privacidad</a>
       <a href="terminos.html">Términos y Condiciones</a>
-    </div>
+      <span>contacto@urbapadel.com</span>
+    </nav>
   </div>
 </footer>
 
+<script>
+(function () {
+  // Réplica jugable de la pantalla de reservas. Turnos reales de 90 min; ocupación de ejemplo.
+  var times = ["09:00-10:30", "10:30-12:00", "12:00-13:30", "13:30-15:00", "15:00-16:30", "16:30-18:00", "18:00-19:30", "19:30-21:00"];
+  var plan = [ { ocupada: [0, 6], comida: [3, 4] }, { ocupada: [1, 5], comida: [3, 4] } ];
+  var labels = { libre: "Disponible", ocupada: "Reservada", comida: "Comida", mia: "Tu reserva" };
+  var icons = {
+    libre: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="12" cy="12" r="9"/></svg>',
+    mia: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#40C4FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    ocupada: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>',
+    comida: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
+  };
+  var day = 0, mine = null, pending = null, toastT;
+  var $ = function (id) { return document.getElementById(id); };
+  var mon = ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+  var today = new Date();
+  var dates = [0, 1].map(function (k) { var d = new Date(today); d.setDate(d.getDate() + k); return d; });
+
+  function stateOf(d, i) {
+    if (mine && mine.day === d && mine.i === i) return "mia";
+    if (plan[d].comida.indexOf(i) > -1) return "comida";
+    if (plan[d].ocupada.indexOf(i) > -1) return "ocupada";
+    return "libre";
+  }
+  function toast(msg) {
+    var t = $("app-toast"); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(function () { t.hidden = true; }, 2600);
+  }
+  function renderDates() {
+    var box = $("app-dates"); box.innerHTML = "";
+    dates.forEach(function (d, k) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "app-date"; b.setAttribute("aria-pressed", String(k === day));
+      b.innerHTML = "<strong>" + d.getDate() + "</strong>" + mon[d.getMonth()] + (k === 0 ? "<em>HOY</em>" : "");
+      b.addEventListener("click", function () { day = k; render(); });
+      box.appendChild(b);
+    });
+  }
+  function render() {
+    renderDates();
+    var grid = $("app-slots"); grid.innerHTML = "";
+    times.forEach(function (t, i) {
+      var s = stateOf(day, i);
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "app-slot"; b.dataset.s = s;
+      b.innerHTML = '<span class="t">' + icons[s] + t + "</span><small>" + labels[s] + "</small>";
+      b.setAttribute("aria-label", t + ", " + labels[s]);
+      b.addEventListener("click", function () {
+        if (s === "comida") return toast("Franja de comida: la pista no se puede reservar.");
+        if (s === "ocupada") return toast("Esta hora ya la ha reservado otro vecino.");
+        if (s === "mia") return toast("Esta es tu reserva. Puedes cancelarla arriba.");
+        if (mine) return toast("Ya tienes una reserva activa. Cancélala para coger otra hora.");
+        pending = { day: day, i: i };
+        $("app-dlg-p").innerHTML = "¿Quieres reservar la <em>Pista 1</em> a las <i>" + t + "</i>?";
+        $("app-modal").hidden = false; $("app-yes").focus();
+      });
+      grid.appendChild(b);
+    });
+    $("app-active").hidden = !mine;
+    if (mine) $("app-active-txt").textContent = "Pista 1 - " + times[mine.i] + (mine.day ? " (mañana)" : " (hoy)");
+  }
+  $("app-no").addEventListener("click", function () { $("app-modal").hidden = true; pending = null; });
+  $("app-yes").addEventListener("click", function () {
+    mine = pending; pending = null; $("app-modal").hidden = true; render(); toast("¡Reserva confirmada!");
+  });
+  $("app-cancel").addEventListener("click", function () { mine = null; render(); toast("Reserva cancelada. La hora vuelve a estar libre."); });
+  render();
+
+  var copy = document.getElementById("copy");
+  copy.addEventListener("click", function () {
+    var text = document.getElementById("mail").textContent;
+    var done = function () { copy.textContent = "Copiado"; setTimeout(function () { copy.textContent = "Copiar email"; }, 1800); };
+    try {
+      navigator.clipboard.writeText(text).then(done, function () { selectMail(); });
+    } catch (e) { selectMail(); }
+  });
+  function selectMail() {
+    var r = document.createRange(); r.selectNodeContents(document.getElementById("mail"));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+})();
+</script>
+<button class="to-top" id="to-top" type="button" aria-label="Volver arriba"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>
+(function () {
+  var b = document.getElementById("to-top");
+  var onScroll = function () { b.classList.toggle("show", window.scrollY > window.innerHeight * 0.8); };
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  b.addEventListener("click", function () {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  });
+})();
+</script>
 </body>
 </html>
