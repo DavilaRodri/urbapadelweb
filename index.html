@@ -398,7 +398,8 @@ footer a:hover { color: var(--ink); }
   .device { width: 100%; }
   .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 36px; }
   .steps li:nth-child(2)::after { display: none; }
-  .top nav { display: none; }
+  .top nav a:not(.nav-guide) { display: none; }
+  .top nav .nav-guide { color: var(--on-court); padding: 8px 14px; border-radius: 10px; border: 1px solid rgb(255 255 255 / .4); font-weight: 600; }
   .court-lines line { display: none; }
 }
 @media (max-width: 520px) {
@@ -436,7 +437,7 @@ footer a:hover { color: var(--ink); }
       <a href="#como">Cómo se entra</a>
       <a href="#faq">Preguntas</a>
       <a href="#admins">Administradores</a>
-      <a href="/onboarding/">Guía</a>
+      <a class="nav-guide" href="/onboarding/">Guía</a>
     </nav>
   </div>
 </header>
